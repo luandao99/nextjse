@@ -1,8 +1,9 @@
 'use client';
-import { useCount, useDispatchCount } from '@/Context/store';
+import { useGlobalDispatchContext } from '@/Context/store';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { MouseEvent, useState } from 'react';
+import React, { useState } from 'react';
 
 interface Formuser {
   password: string;
@@ -15,13 +16,8 @@ interface ChildFormTitle {
 const Form = ({ title, pathUrl }: ChildFormTitle) => {
   const [user, setUser] = useState<Formuser>({ email: '', password: '' });
   const URL = `https://api-ecom.duthanhduoc.com/${pathUrl}`;
-  //   const dispatchData = useGlobalDispatchContext();
-  //   const state = useGlobalContext();
-  //   console.log('🚀 ~ file: Form.tsx:20 ~ Form ~ state:', state);
-  const dispatch = useDispatchCount();
+  const dispatchData = useGlobalDispatchContext();
   const router = useRouter();
-  const count = useCount();
-  console.log('🚀 ~ file: Form.tsx:24 ~ Form ~ count:', count);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // prevent the default form submit behavior
@@ -36,29 +32,32 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
       .then((test) => {
         console.log('Form submission successful:', test.data?.user);
         if (test?.data) {
-          //   dispatch({
-          //     type: 'INCREASE_BY',
-          //     payload: 15,
-          //   });
-          // router.push('/');
+          dispatchData({
+            type: 'UPDATE_USER',
+            payload: {
+              username: test?.data?.user?.email,
+              password: test?.data?.access_token,
+            },
+          });
+          router.push('/about');
         }
       })
       .catch((error) => {
         console.error('Error submitting form:', error);
       });
   };
-  const handleIncrease = (event: MouseEvent<HTMLButtonElement>) => {
-    console.log('🚀 ~ file: Form.tsx:51 ~ handleIncrease ~ event:');
-    dispatch({
-      type: 'INCREASE',
-    });
-  };
+  //   const handleIncrease = (event: MouseEvent<HTMLButtonElement>) => {
+  //     console.log('🚀 ~ file: Form.tsx:51 ~ handleIncrease ~ event:');
+  //     dispatch({
+  //       type: 'INCREASE',
+  //     });
+  //   };
 
-  const handleIncrease15 = (event: MouseEvent<HTMLButtonElement>) =>
-    dispatch({
-      type: 'INCREASE_BY',
-      payload: 15,
-    });
+  //   const handleIncrease15 = (event: MouseEvent<HTMLButtonElement>) =>
+  //     dispatch({
+  //       type: 'INCREASE_BY',
+  //       payload: 15,
+  //     });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -204,12 +203,12 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   </p>
                 </div>
               </form>
-              <p>Counter: {count}</p>
+              {/* <p>Counter: {count}</p>
               <button onClick={handleIncrease}>Increase</button>
               <button onClick={handleIncrease15}>Increase By 15</button>
               <p>
                 <Link href="/">Home</Link>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

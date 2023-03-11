@@ -1,4 +1,4 @@
-import { CounterProvider } from '@/Context/store';
+import { GlobalContextProvider } from '@/Context/store';
 
 export const metadata = {
   title: 'Next.js',
@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CounterProvider>{children}</CounterProvider>
+        <GlobalContextProvider>{children}</GlobalContextProvider>
       </body>
     </html>
   );
