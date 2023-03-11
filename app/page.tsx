@@ -1,23 +1,34 @@
-'use client'
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import { initialState, reducer } from '@/Reducer/UserReducer'
-import { useReducer } from 'react'
+'use client';
+import { useCount, useDispatchCount } from '@/Context/store';
+import styles from '@/styles/Home.module.css';
+import { Inter } from 'next/font/google';
+import Image from 'next/image';
+import Link from 'next/link';
+import { MouseEvent } from 'react';
 
-
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 export default function Home() {
- const [state] = useReducer(reducer,initialState);
+  const count = useCount();
+  console.log('🚀 ~ file: index.tsx:10 ~ Home ~ data:', count);
+  const dispatch = useDispatchCount();
 
- console.log("----------------------------------", state);
+  const handleIncrease = (event: MouseEvent<HTMLButtonElement>) =>
+    dispatch({
+      type: 'INCREASE',
+    });
+  const handleDecrease = (event: MouseEvent<HTMLButtonElement>) =>
+    dispatch({
+      type: 'DECREASE',
+    });
+  const handleIncrease15 = (event: MouseEvent<HTMLButtonElement>) =>
+    dispatch({
+      type: 'INCREASE_BY',
+      payload: 15,
+    });
   return (
     <>
       <main className={styles.main}>
-        <div className={styles.description}>
-      
-        </div>
+        <div className={styles.description}></div>
 
         <div className={styles.center}>
           <Image
@@ -97,7 +108,14 @@ export default function Home() {
             </p>
           </a>
         </div>
+        <p>Counter: {count}</p>
+        <button onClick={handleIncrease}>Increase</button>
+        <button onClick={handleDecrease}>De Increase</button>
+        <button onClick={handleIncrease15}>Increase By 15</button>
+        <p>
+          <Link href="/about">About</Link>
+        </p>
       </main>
     </>
-  )
+  );
 }

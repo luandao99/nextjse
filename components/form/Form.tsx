@@ -1,8 +1,8 @@
-"use client";
-import React, { useCallback, useReducer } from "react";
-import Link from "next/link";
-import { useEffect ,useState } from "react";
-import { reducer, initialState } from "@/Reducer/UserReducer";
+'use client';
+import { useCount, useDispatchCount } from '@/Context/store';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { MouseEvent, useState } from 'react';
 
 interface Formuser {
   password: string;
@@ -10,42 +10,56 @@ interface Formuser {
 }
 interface ChildFormTitle {
   title: string;
-  pathUrl:string
+  pathUrl: string;
 }
 const Form = ({ title, pathUrl }: ChildFormTitle) => {
-  const [user, setUser] = useState<Formuser>({ email: "", password: "" });
-   const [state, dispatch] = useReducer(reducer, initialState);
-  const URL = `https://api-ecom.duthanhduoc.com/${pathUrl}`
-  const handleSubmit =useCallback( async (event: React.FormEvent<HTMLFormElement>) => {
+  const [user, setUser] = useState<Formuser>({ email: '', password: '' });
+  const URL = `https://api-ecom.duthanhduoc.com/${pathUrl}`;
+  //   const dispatchData = useGlobalDispatchContext();
+  //   const state = useGlobalContext();
+  //   console.log('🚀 ~ file: Form.tsx:20 ~ Form ~ state:', state);
+  const dispatch = useDispatchCount();
+  const router = useRouter();
+  const count = useCount();
+  console.log('🚀 ~ file: Form.tsx:24 ~ Form ~ count:', count);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // prevent the default form submit behavior
-   await fetch(`https://api-ecom.duthanhduoc.com/${pathUrl}`, {
-      method: "POST",
+    await fetch(`https://api-ecom.duthanhduoc.com/${pathUrl}`, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
     })
       .then((response) => response.json())
       .then((test) => {
-        // {email} = user.data.user.email;
-        console.log("Form submission successful:",test );
-        console.log(test.data.user.email);
-        // console.log("user",datauser.email)
-        // setUser({ password: "", email: "" }); // reset form fields
-        
-        if(test?.data?.user){
-          dispatch({ type: "UPDATE_USER", payload: test?.data?.user });
+        console.log('Form submission successful:', test.data?.user);
+        if (test?.data) {
+          //   dispatch({
+          //     type: 'INCREASE_BY',
+          //     payload: 15,
+          //   });
+          // router.push('/');
         }
-
       })
       .catch((error) => {
-        console.error("Error submitting form:", error);
+        console.error('Error submitting form:', error);
       });
-  },[user]);
-  
-  // useEffect(() => {
-  //   setData([{ firstName: abc.data.user.email }]);
-  // }, []);
+  };
+  const handleIncrease = (event: MouseEvent<HTMLButtonElement>) => {
+    console.log('🚀 ~ file: Form.tsx:51 ~ handleIncrease ~ event:');
+    dispatch({
+      type: 'INCREASE',
+    });
+  };
+
+  const handleIncrease15 = (event: MouseEvent<HTMLButtonElement>) =>
+    dispatch({
+      type: 'INCREASE_BY',
+      payload: 15,
+    });
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
@@ -67,7 +81,6 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   <p className="mb-0 mr-4 text-lg">Sign in with</p>
                   <button
                     type="button"
-                  
                     user-te-ripple-color="light"
                     className="mx-1 h-9 w-9 rounded-full bg-primary uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   >
@@ -83,7 +96,6 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
 
                   <button
                     type="button"
-                  
                     user-te-ripple-color="light"
                     className="mx-1 h-9 w-9 rounded-full bg-primary uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   >
@@ -99,7 +111,6 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
 
                   <button
                     type="button"
-                  
                     user-te-ripple-color="light"
                     className="mx-1 h-9 w-9 rounded-full bg-primary uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   >
@@ -120,7 +131,7 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   </p>
                 </div>
 
-                <div className="relative mb-6" >
+                <div className="relative mb-6">
                   <input
                     type="text"
                     className="peer block min-h-[auto] w-full rounded border-0 bg-transparent py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 user-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([user-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -138,7 +149,7 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   </label>
                 </div>
 
-                <div className="relative mb-6" >
+                <div className="relative mb-6">
                   <input
                     type="password"
                     className="peer block min-h-[auto] w-full rounded border-0 bg-transparent py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 user-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([user-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -178,16 +189,14 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   <button
                     type="submit"
                     className="inline-block rounded bg-primary px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                  
                     user-te-ripple-color="light"
                   >
                     {title}
                   </button>
-
                   <p className="mt-2 mb-0 pt-1 text-sm font-semibold">
                     Don't have an account?
                     <Link
-                      href={"test"}
+                      href={'test'}
                       className="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
                     >
                       Register
@@ -195,6 +204,12 @@ const Form = ({ title, pathUrl }: ChildFormTitle) => {
                   </p>
                 </div>
               </form>
+              <p>Counter: {count}</p>
+              <button onClick={handleIncrease}>Increase</button>
+              <button onClick={handleIncrease15}>Increase By 15</button>
+              <p>
+                <Link href="/">Home</Link>
+              </p>
             </div>
           </div>
         </div>
